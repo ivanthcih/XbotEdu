@@ -30,14 +30,14 @@ public class DriveToPositionCommand extends BaseCommand {
         // - Gets the robot to move to the target position 
         // - Hint: use drive.distanceSensor.get() to find out where you are
         // - Gets the robot stop (or at least be moving really really slowly) at the target position
-        
+       
         // How you do this is up to you. If you get stuck, ask a mentor or student for some hints!
     }
     
     @Override
     public boolean isFinished() {
-        // Modify this to return true once you have met your goal, 
-        // and you're moving fairly slowly (ideally stopped)
+        /* Modify this to RETURN TRUE once you have met your goal, 
+         and you're moving fairly slowly (ideally stopped) */
         return false;
     }
 
