@@ -17,6 +17,7 @@ public class TogglePrecisionDriveCommand extends BaseCommand {
     @Override
     public void initialize() {
         // Here, you want to call the DriveSubsystem and tell it to change its precision mode.
+        drive.TogglePrecisionMode();
         // This means you'll need to add a new method into DriveSubsystem, and there are two
         // major ways to do this:
         // 1) Create something like GetPrecisionMode() and SetPrecisionMode() on the DriveSubsystem. Your
@@ -39,5 +40,7 @@ public class TogglePrecisionDriveCommand extends BaseCommand {
         // say that the command is finished right away.
         return true;
     }
-
+    
+    public void end(){
+    }
 }

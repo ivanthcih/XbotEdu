@@ -14,11 +14,12 @@ public class CObserveFightingCommands extends BaseWPITest{
     public void watchCommandsFight() {
         log = Logger.getLogger(CObserveFightingCommands.class);
         
+        
         CommandA cmda = injector.getInstance(CommandA.class);
-        CommandB cmdb = injector.getInstance(CommandB.class);
-
         cmda.setRunWhenDisabled(true);
+        CommandB cmdb = injector.getInstance(CommandB.class);
         cmdb.setRunWhenDisabled(true);
+        
         
         // CommandA starts. 
         cmda.start();
