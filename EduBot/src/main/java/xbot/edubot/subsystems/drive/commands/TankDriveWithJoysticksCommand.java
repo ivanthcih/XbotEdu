@@ -13,14 +13,14 @@ public class TankDriveWithJoysticksCommand extends BaseCommand {
 
     DriveSubsystem drive;
     OperatorInterface operate;
-    
+
     @Inject
     public TankDriveWithJoysticksCommand(DriveSubsystem driveSubsystem, OperatorInterface oi) {
         drive = driveSubsystem;
         operate = oi;
         this.requires(drive);
     }
-    
+
     @Override
     public void initialize() {
         // This code is run one time, right when the command is started.
@@ -29,17 +29,19 @@ public class TankDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        // You need to get values from the joysticks and pass them into the motors. 
-        
+        // You need to get values from the joysticks and pass them into the motors.
+
         // Get values from the joysticks:
         // Here's how to get how far the left joystick's Y-axis is pushed:
         double leftValue = operate.gamepad.getLeftVector().y;
+        double rightValue = operate.gamepad.getRightVector().y;
         // You'll need to get how far the RIGHT joystick's Y-axis is pushed as well.
-        
+
         // Pass values into the DriveSubsystem so it can control motors:
-        // right now, this just sends the left power to the left part of the drive. You'll
+        // right now, this just sends the left power to the left part of the drive.
+        // You'll
         // need to give it a right power as well.
-        drive.tankDrive(leftValue, 0);
+        drive.tankDrive(leftValue, rightValue);
     }
 
 }

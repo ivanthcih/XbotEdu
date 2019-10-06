@@ -1,8 +1,10 @@
 package xbot.edubot.subsystems.drive.commands;
 
 import com.google.inject.Inject;
-
 import xbot.common.command.BaseCommand;
+import xbot.common.controls.sensors.DistanceSensor;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDManager;
 import xbot.edubot.subsystems.drive.DriveSubsystem;
 import xbot.edubot.subsystems.pose.PoseSubsystem;
 
@@ -10,38 +12,47 @@ public class DriveToPositionCommand extends BaseCommand {
 
     DriveSubsystem drive;
     PoseSubsystem pose;
-    
+    PIDManager pid;
+    double targetPosition;
+    double position;
+
     @Inject
-    public DriveToPositionCommand(DriveSubsystem driveSubsystem, PoseSubsystem pose) {
+    public DriveToPositionCommand(DriveSubsystem driveSubsystem, PoseSubsystem pose, PIDFactory pf) {
         this.drive = driveSubsystem;
         this.pose = pose;
+        this.pid = pf.createPIDManager("DriveToPoint");
+
+        pid.setEnableErrorThreshold(true); // Turn on distance checking
+        pid.setErrorThreshold(0.1);
+        pid.setEnableDerivativeThreshold(true); // Turn on speed checking
+        pid.setDerivativeThreshold(0.1);
+
+        pid.setP(1.25);
+        pid.setD(5);
+
     }
-    
+
     public void setTargetPosition(double position) {
-        // This method will be called by the test, and will give you a goal distance.
-        // You'll need to remember this target position and use it in your calculations.
+        targetPosition = position;
     }
-    
+
     @Override
     public void initialize() {
-        // If you have some one-time setup, do it here.
+        pid.reset();
     }
 
     @Override
     public void execute() {
-        // Here you'll need to figure out a technique that:
-        // - Gets the robot to move to the target position 
-        // - Hint: use pose.getPosition() to find out where you are
-        // - Gets the robot stop (or at least be moving really really slowly) at the target position
-        
-        // How you do this is up to you. If you get stuck, ask a mentor or student for some hints!
+        double position = pose.getPosition();
+        System.out.println("Position: " + position);
+        double power = pid.calculate(targetPosition, position);
+        System.out.println("Power: " + power);
+        drive.tankDrive(power, power);
     }
-    
+
     @Override
     public boolean isFinished() {
-        // Modify this to return true once you have met your goal, 
-        // and you're moving fairly slowly (ideally stopped)
-        return false;
+        return pid.isOnTarget();
     }
 
 }
