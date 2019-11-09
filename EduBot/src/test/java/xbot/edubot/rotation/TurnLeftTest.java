@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import xbot.edubot.BaseDriveTest;
 import xbot.edubot.subsystems.drive.commands.TurnLeft90DegreesCommand;
 
-public class HelpTurnLeftTest extends BaseDriveTest{
+public class TurnLeftTest extends BaseDriveTest{ // tests the the turning for TurnLeft90
     @Test
     public void From150(){
        double result = TurnLeft90DegreesCommand.To90Angle(240); // 240 how degrees you are moving

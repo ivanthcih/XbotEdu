@@ -12,6 +12,8 @@ import xbot.edubot.MockHeadingSensor;
 @Singleton
 public class DriveSubsystem extends BaseSubsystem { //subclass extends superclass
     boolean inPrecisionMode = false;
+    public double leftPower = 1;
+    public double rightPower = 1;
 
     public MockDistanceSensor distanceSensor;
     public MockHeadingSensor gyro;
@@ -37,11 +39,12 @@ public class DriveSubsystem extends BaseSubsystem { //subclass extends superclas
         // You'll need to take these power values and assign them to all of the motors. As
         // an example, here is some code that has the frontLeft motor to spin according to
         // the value of leftPower:
+
         if(inPrecisionMode) {
             leftPower = leftPower/2;
             rightPower = rightPower/2;
-        } 
-
+        }
+        
         frontLeft.simpleSet(leftPower);
         rearLeft.simpleSet(leftPower);
         frontRight.simpleSet(rightPower);

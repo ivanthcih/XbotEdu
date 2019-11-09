@@ -39,14 +39,14 @@ public class DriveToPositionCommand extends BaseCommand {
         currentPos = drive.getDistance();
         speed = oldPos - currentPos;
         
-        double power = 0;
+        double leftPower = 0;
         if(currentPos > targetGoal){ // makes the blue circle move and tracks the loops it goes through
-            power = -0.3;
+            leftPower = -0.3;
         }
         else{
-            power = 0.6;
+            leftPower = 0.5;
         }
-        drive.tankDrive(power, power);
+        drive.tankDrive(leftPower, -leftPower);
         // How you do this is up to you. If you get stuck, ask a mentor or student for some hints!
         
         oldPos = currentPos; // overrites the position after it moves onto a new pos
@@ -62,9 +62,9 @@ public class DriveToPositionCommand extends BaseCommand {
         if(nearGoal && movingSlow){ 
             return true;
         }
+        
+        return false;
         /* Modify this to RETURN TRUE once you have met your goal, 
          and you're moving fairly slowly (ideally stopped) */
-         
-        return false;
     }
 }

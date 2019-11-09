@@ -32,7 +32,7 @@ public class RotationTestVisualizer {
                 try {
                     RotationTestVisualizer window = new RotationTestVisualizer();
                     window.frmOrientationTestVisualizer.setVisible(true);
-                } catch (Exception e) {
+                } catch (Exception e) { 
                     e.printStackTrace();
                 }
             }

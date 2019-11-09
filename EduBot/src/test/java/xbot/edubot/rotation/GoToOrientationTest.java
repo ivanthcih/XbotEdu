@@ -11,9 +11,9 @@ public class GoToOrientationTest extends BaseOrientationEngineTest implements Se
     @Test
     public void testGoToOrientation() {
         DriveToOrientationCommand command = injector.getInstance(DriveToOrientationCommand.class);
-        double initial = 160;
-        double goal = 130;
-        
+        double initial = 0;
+        double goal = 130; // if set to an "illegal" angle, it will mark it as incorrect, though the visualizer shows its on the goal
+
         command.setTargetHeading(goal);
 
         setUpTestEnvironment(command, initial, goal);

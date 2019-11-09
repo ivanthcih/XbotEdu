@@ -9,11 +9,10 @@ public class DriveToOrientationCommand extends BaseCommand{
     
     DriveSubsystem drive; // write class-level variables here
     double GoalYaw;
-    double currentPos;
     double speed;
     double currentYaw;
     double oldYaw;
-    double leftPower;
+    double power;
 
     @Inject
     public DriveToOrientationCommand(DriveSubsystem driveSubsystem) {
@@ -21,42 +20,65 @@ public class DriveToOrientationCommand extends BaseCommand{
     }
     
     public void setTargetHeading(double heading) {
-        GoalYaw = heading;
-
-        // This method will be called by the test, and will give you a goal heading.
-        // You'll need to remember this target position and use it in your calculations.
+        GoalYaw = heading; // This method will be called by the test, and will give you a goal heading.
     }
+
+    public static double seeDirection(double goal, double initial){ // checks angle so it can decide to turn left or right
+        initial = angleChange(initial);
+        goal = angleChange(goal);
+        double GoalDistYaw = goal - initial;
+
+        if (GoalDistYaw >= 180) { // turns 
+            GoalDistYaw = GoalDistYaw - 360;
+        }
+        if (GoalDistYaw <= -180) { // turns
+            GoalDistYaw = 360 + GoalDistYaw;
+        }
+
+        return GoalDistYaw;
+    }
+
+    public static double angleChange(Double angle){ // makes it a legal angle
+        if(angle >= 180){
+            angle = (angle % 360) - 360;
+        } else if(angle <= -180){
+            angle = (angle % 360) + 360;
+        }
+        return angle;
+    }
+    
     
     @Override
     public void initialize() {
-        // If you have some one-time setup, do it here.
+        /*
+        initialize currentYaw, oldYaw, and speed to get it started
+        */
+        currentYaw = drive.getYaw();
+        oldYaw = currentYaw;      
+
+        speed = 0;
     }
 
     @Override
     public void execute() {
-        // Here you'll need to figure out a technique that:
-        // - Gets the robot to turn to the target orientation
-        // - Gets the robot stop (or at least be moving really really slowly) at the target position
         currentYaw = drive.getYaw();
+
+        double distAway = seeDirection(GoalYaw, currentYaw);
         speed = currentYaw - oldYaw;
 
-        double GoalDistYaw = Math.abs(GoalYaw - currentYaw);  // make it turn to the shortest way!!
-        // if(GoalDistYaw) // make it have the ability turn right and left 
-
-        leftPower = GoalDistYaw/90 * 5 - speed*1;
-        
-        
-        drive.tankDrive(-leftPower, leftPower); 
-
+        power = 5 * distAway/90 - (speed);
+        /*
+          5 is a constant(don't know why), subtracted by speed because
+          the equation could be inaccurate. divided by 90 bc brought from turnleft90
+        */
+        drive.tankDrive(-power, power); 
         oldYaw = currentYaw;
-        
-        // How you do this is up to you. If you get stuck, ask a mentor or student for some hints!
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished() { // checks if its near the goal and makes the mock robot stop
         boolean nearGoal = Math.abs( drive.getYaw() - GoalYaw) < 0.7;
-        boolean movingSlow = Math.abs(speed) < 0.6;
+        boolean movingSlow = Math.abs(speed) < 0.1;
 
        if(nearGoal && movingSlow){
             return true;
@@ -64,8 +86,15 @@ public class DriveToOrientationCommand extends BaseCommand{
        
        return false;
 
-       // Modify this to return true once you have met your goal, 
-       // and you're moving fairly slowly (ideally stopped)
     }
+
+    public static double OrientatTest(double Angle){ // just a method that calls custom tests
+        if(Math.abs(Angle)>180){
+            Angle = (Angle % 180) - 180;
+        }
+        return Angle;
+    }
+
+
 
 }
