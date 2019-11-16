@@ -27,14 +27,6 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     
     @Override
     public void initialize() { 
-        /*
-        y = fw/bw/stop
-        x = left/right/straight
-        L = y + x;
-        R = y - x;
-
-        */
-        
     }
 
     @Override
