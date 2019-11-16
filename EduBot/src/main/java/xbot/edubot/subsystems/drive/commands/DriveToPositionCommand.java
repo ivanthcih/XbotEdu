@@ -13,7 +13,7 @@ public class DriveToPositionCommand extends BaseCommand {
     double currentPos; // class level variable
     double speed;
     double oldPos;
-    
+
     @Inject
     public DriveToPositionCommand(DriveSubsystem driveSubsystem) {
         this.drive = driveSubsystem;
