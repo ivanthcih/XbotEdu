@@ -14,7 +14,7 @@ public class DriveSubsystem extends BaseSubsystem { //subclass extends superclas
     boolean inPrecisionMode = false;
     public double leftPower = 1;
     public double rightPower = 1;
-
+    
     public MockDistanceSensor distanceSensor;
     public MockHeadingSensor gyro;
     
