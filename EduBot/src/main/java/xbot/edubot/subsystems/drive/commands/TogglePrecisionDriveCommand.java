@@ -38,6 +38,10 @@ public class TogglePrecisionDriveCommand extends BaseCommand {
         // Commands keep running until they are finished.
         // Since we want this command to just run once (toggling precision mode), we 
         // say that the command is finished right away.
+      //  if(changePrecisionMode.isFinished()){ // REVIEW THIS
+
+      //  }
+
         return true;
     }
     
