@@ -4,19 +4,32 @@ import com.google.inject.Inject;
 
 
 import xbot.common.command.BaseCommand;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDManager;
 import xbot.edubot.subsystems.drive.DriveSubsystem;
 
 public class DriveToPositionCommand extends BaseCommand {
 
     DriveSubsystem drive;
+    PIDManager pid;
     double targetGoal; // target goal
     double currentPos; // class level variable
     double speed;
     double oldPos;
 
     @Inject
-    public DriveToPositionCommand(DriveSubsystem driveSubsystem) {
+    public DriveToPositionCommand(DriveSubsystem driveSubsystem, PIDFactory pf){
         this.drive = driveSubsystem;
+        this.pid = pf.createPIDManager("DriveToPoint");
+
+        pid.setEnableErrorThreshold(true); // Turn on distance checking
+        pid.setErrorThreshold(0.1);
+        pid.setEnableDerivativeThreshold(true); // Turn on speed checking
+        pid.setDerivativeThreshold(0.1);
+
+        // manually adjust these values to adjust the action
+        pid.setP(0.5);
+        pid.setD(2);
     }
     
     public void setTargetPosition(double position) {
@@ -27,6 +40,7 @@ public class DriveToPositionCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+        pid.reset();
         // If you have some one-time setup, do it here.
     }
 
@@ -36,34 +50,39 @@ public class DriveToPositionCommand extends BaseCommand {
         // - Gets the robot to move to the target position 
         // - Hint: use drive.distanceSensor.get() to find out where you are
         // - Gets the robot stop (or at least be moving really really slowly) at the target position
-        currentPos = drive.getDistance();
-        speed = oldPos - currentPos;
+        double currentPosition = drive.getDistance();
+        double power = pid.calculate(targetGoal, currentPosition);
+        drive.tankDrive(power, power);
+
+        // currentPos = drive.getDistance();
+        // speed = oldPos - currentPos;
         
-        double leftPower = 0;
-        if(currentPos > targetGoal){ // makes the blue circle move and tracks the loops it goes through
-            leftPower = -0.3;
-        }
-        else{
-            leftPower = 0.5;
-        }
-        drive.tankDrive(leftPower, -leftPower);
-        // How you do this is up to you. If you get stuck, ask a mentor or student for some hints!
+        // double leftPower = 0;
+        // if(currentPos > targetGoal){ // makes the blue circle move and tracks the loops it goes through
+        //     leftPower = -0.3;
+        // }
+        // else{
+        //     leftPower = 0.5;
+        // }
+        // drive.tankDrive(leftPower, -leftPower);
+        // // How you do this is up to you. If you get stuck, ask a mentor or student for some hints!
         
-        oldPos = currentPos; // overrites the position after it moves onto a new pos
+        // oldPos = currentPos; // overrites the position after it moves onto a new pos
     }
     
     @Override
     public boolean isFinished() {
-        boolean nearGoal = Math.abs(currentPos - targetGoal) < 0.1;  // if the difference is less than 0.1, then true
-        boolean movingSlow = Math.abs(speed) < 0.2; // if current speed is < 0.2, then true
-        // the decimal numbers = the velocity/speed
+        // boolean nearGoal = Math.abs(currentPos - targetGoal) < 0.1;  // if the difference is less than 0.1, then true
+        // boolean movingSlow = Math.abs(speed) < 0.2; // if current speed is < 0.2, then true
+        // // the decimal numbers = the velocity/speed
 
 
-        if(nearGoal && movingSlow){ 
-            return true;
-        }
+        // if(nearGoal && movingSlow){ 
+        //     return true;
+        // }
         
-        return false;
+        // return false;
+        return pid.isOnTarget();
         /* Modify this to RETURN TRUE once you have met your goal, 
          and you're moving fairly slowly (ideally stopped) */
     }
