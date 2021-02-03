@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 
 import xbot.common.command.BaseCommand;
 import xbot.edubot.subsystems.drive.DriveSubsystem;
+import xbot.edubot.subsystems.pose.PoseSubsystem;
 
 // init(initialized) is first, then isFinished goes before execute method
 

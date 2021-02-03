@@ -2,9 +2,9 @@ package xbot.edubot.subsystems.drive.commands;
 
 import com.google.inject.Inject;
 
-
 import xbot.common.command.BaseCommand;
 import xbot.edubot.subsystems.drive.DriveSubsystem;
+import xbot.edubot.subsystems.pose.PoseSubsystem;
 
 public class DriveToPositionCommand extends BaseCommand {
 
@@ -13,10 +13,12 @@ public class DriveToPositionCommand extends BaseCommand {
     double currentPos; // class level variable
     double speed;
     double oldPos;
+    PoseSubsystem pose;
     
     @Inject
-    public DriveToPositionCommand(DriveSubsystem driveSubsystem) {
+    public DriveToPositionCommand(DriveSubsystem driveSubsystem, PoseSubsystem pose) {
         this.drive = driveSubsystem;
+        this.pose = pose;
     }
     
     public void setTargetPosition(double position) {
